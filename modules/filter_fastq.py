@@ -1,3 +1,6 @@
+from modules.dna_rna_tools import is_nucleic_acid
+
+
 def gc_content(sequence) -> float:
     """
     Calculates GC content for a nucleotide sequence.
