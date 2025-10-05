@@ -60,3 +60,7 @@ def transcribe(sequence):
     for i in range(0, len(sequence)):
         compl_seq.append(TRANSCR_RULES[sequence[i]])
     return "".join(compl_seq)
+
+
+def reverse(sequence):
+    return sequence[::-1]
