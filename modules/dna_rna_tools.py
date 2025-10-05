@@ -76,3 +76,9 @@ def complement(sequence):
         for i in range(0, len(sequence)):
             compl_seq.append(RNA_COMPL_RULES[sequence[i]])
         return "".join(compl_seq)
+    
+
+def validate_input(args):
+    if len(args) < 2:
+        raise ValueError("Error: at least 2 arguments expected!")
+    return args[:-1]
