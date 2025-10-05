@@ -87,3 +87,16 @@ def validate_input(args):
     if len(args) < 2:
         raise ValueError("Error: at least 2 arguments expected!")
     return args[:-1]
+
+
+def validate_function(tool):
+    TOOLS = {
+    "is_nucleic_acid": is_nucleic_acid,
+    "transcribe": transcribe,
+    "reverse": reverse,
+    "complement": complement,
+    "reverse_complement": reverse_complement,
+}
+    if tool not in TOOLS:
+        raise ValueError("Error: " f"{tool} is unsupported tool!")
+    return TOOLS[tool]
