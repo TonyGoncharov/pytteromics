@@ -53,3 +53,10 @@ def is_nucleic_acid(sequence) -> bool:
     dna = set("ATGCatgc")
     rna = set("AUGCaugc")
     return (seq_set <= dna) or (seq_set <= rna)
+
+
+def transcribe(sequence):
+    compl_seq = []
+    for i in range(0, len(sequence)):
+        compl_seq.append(TRANSCR_RULES[sequence[i]])
+    return "".join(compl_seq)
