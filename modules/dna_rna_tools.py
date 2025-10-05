@@ -78,6 +78,11 @@ def complement(sequence):
         return "".join(compl_seq)
     
 
+def reverse_complement(sequence):
+    compl_seq = complement(sequence)
+    return reverse(compl_seq)
+    
+
 def validate_input(args):
     if len(args) < 2:
         raise ValueError("Error: at least 2 arguments expected!")
