@@ -64,3 +64,15 @@ def transcribe(sequence):
 
 def reverse(sequence):
     return sequence[::-1]
+
+
+def complement(sequence):
+    compl_seq = []
+    if "T" in sequence.upper():
+        for i in range(0, len(sequence)):
+            compl_seq.append(DNA_COMPL_RULES[sequence[i]])
+        return "".join(compl_seq)
+    else:
+        for i in range(0, len(sequence)):
+            compl_seq.append(RNA_COMPL_RULES[sequence[i]])
+        return "".join(compl_seq)
