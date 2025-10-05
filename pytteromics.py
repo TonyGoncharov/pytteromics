@@ -1,4 +1,4 @@
-from modules.dna_rna_tools import is_nucleic_acid
+from modules.dna_rna_tools import is_nucleic_acid, validate_input, validate_mode, validate_function
 from modules.filter_fastq import gc_content, qscore
 
 
@@ -43,3 +43,23 @@ def filter_fastq(seqs, gc_bounds = (0, 100), length_bounds = (0, 2**32), quality
             filtered[name] = (sequence, quality_str)
 
     return filtered
+
+
+def run_dna_rna_tools(*args, behavior="mild"):
+    sequences = validate_input(args)
+    behavior = validate_mode(behavior)
+    tool = validate_function(args[-1])
+
+    result = []
+
+    for seq in sequences:
+        if is_nucleic_acid(seq):
+            result.append(tool(seq))
+        else:
+            if behavior == "harsh":
+                raise ValueError(f"Error: {seq} is not a DNA or RNA sequence!")
+            result.append(False)
+
+    if len(result) == 1:
+        return result[0]
+    return result
