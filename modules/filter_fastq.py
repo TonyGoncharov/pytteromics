@@ -1,7 +1,7 @@
 from modules.dna_rna_tools import is_nucleic_acid
 
 
-def gc_content(sequence) -> float:
+def gc_content(sequence: str) -> float:
     """
     Calculates GC content for a nucleotide sequence.
 
@@ -24,7 +24,7 @@ def gc_content(sequence) -> float:
     return gc_percent
 
 
-def qscore(quality_str) -> float:
+def qscore(quality_str: str) -> float:
     """
     Calculates the mean phred33 quality score for a given quality string.
 
