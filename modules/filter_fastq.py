@@ -11,6 +11,17 @@ def calc_gc_percent(sequence: str) -> float:
     return ((g_count + c_count) / sequence_len) * 100
 
 
+def is_gc_passing(
+    sequence: str, 
+    gc_bounds: float | tuple[float, float] = (0, 100)
+) -> bool:
+    if type(gc_bounds) in (int, float):
+        gc_bounds = (0, gc_bounds)
+    min_gc, max_gc = gc_bounds
+    gc_percent = calc_gc_percent(sequence)
+    return min_gc <= gc_percent <= max_gc
+
+
 def qscore(quality_str: str) -> float:
     """
     Calculates the mean phred33 quality score for a given quality string.
