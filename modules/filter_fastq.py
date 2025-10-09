@@ -22,19 +22,10 @@ def is_gc_passing(
     return min_gc <= gc_percent <= max_gc
 
 
-def qscore(quality_str: str) -> float:
-    """
-    Calculates the mean phred33 quality score for a given quality string.
-
-    Arguments:
-    quality_str: str — ASCII-encoded quality string
-
-    Returns:
-    float — mean Q-score across all bases.
-    Returns 0.0 for empty strings.
-    """
-    str_length = len(str(quality_str))
-    if str_length == 0:
+def calc_q_score(quality: str) -> float:
+    quality = str(quality)
+    quality_len = len(quality)
+    if quality_len == 0:
         return 0.0
-    q_scores = [ord(symbol) - 33 for symbol in quality_str]
-    return sum(q_scores) / str_length
+    q_scores = [ord(char) - 33 for char in quality]
+    return sum(q_scores) / quality_len
