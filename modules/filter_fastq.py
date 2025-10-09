@@ -29,3 +29,11 @@ def calc_q_score(quality: str) -> float:
         return 0.0
     q_scores = [ord(char) - 33 for char in quality]
     return sum(q_scores) / quality_len
+
+
+def is_qscore_passing(
+    quality: str, 
+    quality_threshold: int | float = 0
+) -> bool:
+    q_score = calc_q_score(quality)
+    return q_score >= quality_threshold
