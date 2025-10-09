@@ -37,3 +37,14 @@ def is_qscore_passing(
 ) -> bool:
     q_score = calc_q_score(quality)
     return q_score >= quality_threshold
+
+
+def is_len_passing(
+    sequence: str,
+    length_bounds: int | tuple[int, int] = (0, 2**32)
+) -> bool:
+    if type(length_bounds) in (int, float):
+        length_bounds = (length_bounds, 2**32)
+    min_len, max_len = length_bounds
+    return min_len <= len(sequence) <= max_len
+
