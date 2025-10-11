@@ -1,5 +1,5 @@
 from modules.filter_fastq import is_len_passing, is_gc_passing, is_qscore_passing
-from modules.dna_rna_tools import is_nucleic_acid, validate_input, validate_mode, validate_function
+from modules.dna_rna_tools import is_nucleic_acid, prepare_sequences, prepare_tool, transcribe, reverse, complement, reverse_complement
 
 
 def filter_fastq(
@@ -19,21 +19,15 @@ def filter_fastq(
     return filtered_seqs
 
 
-def run_dna_rna_tools(*args, behavior="mild"):
-    sequences = validate_input(args)
-    behavior = validate_mode(behavior)
-    tool = validate_function(args[-1])
-
+def run_dna_rna_tools(*args: str) -> str | bool | list[str | bool]:
+    sequences = prepare_sequences(args)
+    tool = prepare_tool(args)
     result = []
-
     for seq in sequences:
         if is_nucleic_acid(seq):
             result.append(tool(seq))
         else:
-            if behavior == "harsh":
-                raise ValueError(f"Error: {seq} is not a DNA or RNA sequence!")
             result.append(False)
-
     if len(result) == 1:
         return result[0]
     return result
