@@ -1,48 +1,22 @@
+from modules.filter_fastq import is_len_passing, is_gc_passing, is_qscore_passing
 from modules.dna_rna_tools import is_nucleic_acid, validate_input, validate_mode, validate_function
-from modules.filter_fastq import gc_content, qscore
 
 
-def filter_fastq(seqs, gc_bounds = (0, 100), length_bounds = (0, 2**32), quality_threshold = 0):
-    """
-    Filters FASTQ reads by GC-content, read length, and average quality score.
-
-    Arguments:
-    seqs: dict — dictionary with reads in format {name: (sequence, quality_string)}
-    gc_bounds: tuple or int — GC% range; if single number, treated as upper bound
-    length_bounds: tuple or int — read length range; if single number, treated as lower bound
-    quality_threshold: float — minimal average Q-score to keep the read
-
-    Returns:
-    dict — filtered reads {name: (sequence, quality_string)} that passed all conditions.
-
-    Notes:
-    - Sequences failing `is_nucleic_acid()` check are skipped.
-    """
-    if type(gc_bounds) in (int, float):
-        gc_bounds = (0, gc_bounds)
-    if type(length_bounds) in (int, float):
-        length_bounds = (length_bounds, 2**32)
-
-    gc_low, gc_high = gc_bounds
-    length_low, length_high = length_bounds
-
-    filtered = {}
-
-    for name, (sequence, quality_str) in seqs.items():
-        if not is_nucleic_acid(sequence):
-            continue
-        gc = gc_content(sequence)
-        seq_len = len(sequence)
-        avg_q = qscore(quality_str)
-
-        gc_pass = (gc_low <= gc <= gc_high)
-        length_pass = (length_low <= seq_len <= length_high)
-        quality_pass = (avg_q >= quality_threshold)
-
-        if gc_pass and length_pass and quality_pass:
-            filtered[name] = (sequence, quality_str)
-
-    return filtered
+def filter_fastq(
+    seqs: dict[str, tuple[str, str]],
+    gc_bounds: float | tuple[float, float] = (0, 100),
+    length_bounds: int | tuple[int, int] = (0, 2**32),
+    quality_threshold: int | float = 0
+) -> dict[str, tuple[str, str]]: 
+    filtered_seqs = {}
+    for name, (sequence, quality) in seqs.items():
+        if (
+            is_len_passing(sequence, length_bounds)
+            and is_gc_passing(sequence, gc_bounds)
+            and is_qscore_passing(quality, quality_threshold)
+        ):
+            filtered_seqs[name] = (sequence, quality)
+    return filtered_seqs
 
 
 def run_dna_rna_tools(*args, behavior="mild"):
