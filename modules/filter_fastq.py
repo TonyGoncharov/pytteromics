@@ -2,7 +2,7 @@ from modules.dna_rna_tools import is_nucleic_acid
 
 
 def calc_gc_percent(sequence: str) -> float:
-    sequence = str(sequence).upper()
+    sequence = str(sequence).upper().strip()
     sequence_len = len(sequence)
     if sequence_len == 0:
         return 0.0
@@ -23,7 +23,7 @@ def is_gc_passing(
 
 
 def calc_q_score(quality: str) -> float:
-    quality = str(quality)
+    quality = str(quality).strip()
     quality_len = len(quality)
     if quality_len == 0:
         return 0.0
@@ -39,6 +39,11 @@ def is_qscore_passing(
     return q_score >= quality_threshold
 
 
+def calc_len_seq(sequence: str) -> int:
+    sequence = str(sequence).strip()
+    return len(sequence)
+
+
 def is_len_passing(
     sequence: str,
     length_bounds: int | tuple[int, int] = (0, 2**32)
@@ -46,5 +51,4 @@ def is_len_passing(
     if type(length_bounds) in (int, float):
         length_bounds = (length_bounds, 2**32)
     min_len, max_len = length_bounds
-    return min_len <= len(sequence) <= max_len
-
+    return min_len <= calc_len_seq(sequence) <= max_len
