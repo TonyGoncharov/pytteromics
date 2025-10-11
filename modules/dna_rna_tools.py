@@ -34,19 +34,7 @@ RNA_COMPL_RULES = {
 }
 
 
-def is_nucleic_acid(sequence) -> bool:
-    """
-    Checks if the input sequence is DNA or RNA.
-
-    Arguments:
-    sequence: str — input sequence to check
-
-    Returns:
-    bool — True if sequence contains only 
-    DNA (A, T, G, C) or RNA (A, U, G, C) bases.
-    
-    Returns False for empty, mixed, or invalid sequences.
-    """
+def is_nucleic_acid(sequence: str) -> bool:
     if len(sequence) == 0:
         return False
     seq_set = set(sequence)
@@ -55,41 +43,42 @@ def is_nucleic_acid(sequence) -> bool:
     return (seq_set <= dna) or (seq_set <= rna)
 
 
-def transcribe(sequence):
+def transcribe(sequence: str) -> str:
     compl_seq = []
     for i in range(0, len(sequence)):
         compl_seq.append(TRANSCR_RULES[sequence[i]])
     return "".join(compl_seq)
 
 
-def reverse(sequence):
+def reverse(sequence: str) -> str:
     return sequence[::-1]
 
 
-def complement(sequence):
+def complement(sequence: str) -> str:
     compl_seq = []
-    if "T" in sequence.upper():
-        for i in range(0, len(sequence)):
-            compl_seq.append(DNA_COMPL_RULES[sequence[i]])
-        return "".join(compl_seq)
-    else:
+    if "U" in sequence.upper():
         for i in range(0, len(sequence)):
             compl_seq.append(RNA_COMPL_RULES[sequence[i]])
         return "".join(compl_seq)
+    else:
+        for i in range(0, len(sequence)):
+            compl_seq.append(DNA_COMPL_RULES[sequence[i]])
+        return "".join(compl_seq)
     
 
-def reverse_complement(sequence):
+def reverse_complement(sequence: str) -> str:
     compl_seq = complement(sequence)
     return reverse(compl_seq)
     
 
-def validate_input(args):
+def prepare_sequences(args: tuple[str, ...]) -> tuple[str, ...]:
     if len(args) < 2:
         raise ValueError("Error: at least 2 arguments expected!")
     return args[:-1]
 
 
-def validate_function(tool):
+def prepare_tool(args: tuple[str, ...]) -> callable:
+    tool = args[-1]
     TOOLS = {
     "is_nucleic_acid": is_nucleic_acid,
     "transcribe": transcribe,
