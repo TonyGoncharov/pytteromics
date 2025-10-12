@@ -59,3 +59,15 @@ def validate_input(file_path):
     if not os.path.isfile(file_path):
         raise ValueError("Error: at least 2 arguments expected!")
     return file_path
+
+
+def validate_output(file_path, output_mode):
+    if not os.path.exists("filtered"):
+        os.mkdir("filtered")
+    output_fastq = os.path.join("filtered", file_path)
+
+    if output_mode == "append":
+        output_mode = "a"
+    elif output_mode == "rewrite":
+        output_mode = "w"
+    return output_fastq, output_mode
