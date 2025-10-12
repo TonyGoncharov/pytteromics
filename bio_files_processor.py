@@ -6,14 +6,22 @@ def convert_multiline_fasta_to_oneline(
         output_fasta: str = 'data/oneline_fasta.fasta'
 ) -> str:
     os.makedirs(os.path.dirname(output_fasta), exist_ok = True)
-    with open(input_fasta) as input_fasta, open(output_fasta, "a") as output_fasta:
-        while True:
-            header = input_fasta.readline()
-            if header == "":
-                break
-            output_fasta.write(header)
-            line = input_fasta.readline()
-            while not line.startswith(">"):
+    with open(input_fasta) as input_fasta, open(output_fasta, "w") as output_fasta:
+        header = None
+        sequence = []
+        for line in input_fasta:
+            line = line.strip()
+            if len(line) == 0:
+                continue
+            if line.startswith(">"):
+                if header is not None:
+                    output_fasta.write(header + "\n" + "".join(sequence) + "\n")
+                header = line
+                sequence = []
+            else:
+                sequence.append(line)
+        if header is not None:
+                output_fasta.write(header + "\n" + "".join(sequence) + "\n")
                 output_fasta.write(line.strip())
 
 
@@ -32,4 +40,4 @@ def parse_blast_output(
     with open(output_file, "w") as output_file:
         for protein in proteins:
             output_file.write(protein + "\n")
-            
+
