@@ -1,3 +1,4 @@
+import os
 from modules.dna_rna_tools import is_nucleic_acid
 
 
@@ -52,3 +53,9 @@ def is_len_passing(
         length_bounds = (length_bounds, 2**32)
     min_len, max_len = length_bounds
     return min_len <= calc_len_seq(sequence) <= max_len
+
+
+def validate_input(file_path):
+    if not os.path.isfile(file_path):
+        raise ValueError("Error: at least 2 arguments expected!")
+    return file_path
