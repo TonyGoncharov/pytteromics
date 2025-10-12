@@ -10,6 +10,20 @@ def filter_fastq(
     quality_threshold: int | float = 0,
     output_mode: str = "append"
 ) -> str:
+    """
+    Filters reads in a FASTQ file by length, GC content, and quality score.
+
+    Args:
+        input_fastq: Path to the input FASTQ file.
+        output_fastq: Path to the output FASTQ file.
+        gc_bounds: Maximum or (min, max) GC content percentage.
+        length_bounds: Minimum or (min, max) read length.
+        quality_threshold: Minimum average quality score.
+        output_mode: File writing mode ("append" or "rewrite").
+
+    Returns:
+        FASTQ file containing filtered reads.
+    """
     input_fastq = validate_input(input_fastq)
     output_fastq, output_mode = validate_output(output_fastq, output_mode)
     with open(input_fastq) as input_fastq, open(output_fastq, output_mode) as output_fastq:
@@ -30,6 +44,17 @@ def filter_fastq(
 
 
 def run_dna_rna_tools(*args: str) -> str | bool | list[str | bool]:
+    """
+    Applies a selected DNA/RNA processing tool to one or more input sequences.
+
+    Args:
+        *args: Input arguments, including one or more sequences 
+        and selected tool name.
+
+    Returns:
+        A single result (str or bool) if one sequence is provided,
+        otherwise a list of results for all sequences.
+    """
     sequences = prepare_sequences(args)
     tool = prepare_tool(args)
     result = []
