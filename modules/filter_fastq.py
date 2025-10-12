@@ -1,5 +1,4 @@
 import os
-from modules.dna_rna_tools import is_nucleic_acid
 
 
 def calc_gc_percent(sequence: str) -> float:
@@ -55,13 +54,13 @@ def is_len_passing(
     return min_len <= calc_len_seq(sequence) <= max_len
 
 
-def validate_input(file_path):
+def validate_input(file_path: str) -> str:
     if not os.path.isfile(file_path):
         raise ValueError("Error: at least 2 arguments expected!")
     return file_path
 
 
-def validate_output(file_path, output_mode):
+def validate_output(file_path: str, output_mode: str) -> tuple[str, str]:
     if not os.path.exists("filtered"):
         os.mkdir("filtered")
     output_fastq = os.path.join("filtered", file_path)
