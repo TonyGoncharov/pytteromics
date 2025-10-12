@@ -1,7 +1,12 @@
 # pytteromics
 
-`pytteromics` is a small (but proud) Python package for basic bioinformatics tasks on FASTQ data.
-It provides simple utilities for analyzing nucleotide sequences, computing GC content, quality scores, and filtering reads based on sequence and quality thresholds.
+`pytteromics` is a small (but proud) Python package for basic bioinformatics tasks.
+It provides lightweight utilities for working with nucleotide sequences and common file formats like FASTQ, FASTA, and BLAST outputs.
+The package includes tools for:
+	•	Filtering FASTQ reads by length, GC content, and quality thresholds.
+	•	Processing DNA/RNA sequences — transcription, reverse complement, and validation.
+	•	Converting multiline FASTA files into one-line-per-sequence format.
+	•	Parsing BLAST output files to extract and organize protein descriptions.
 
 ## Installation
 
