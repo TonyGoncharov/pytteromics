@@ -9,7 +9,7 @@ def filter_fastq(
     length_bounds: int | tuple[int, int] = (0, 2**32),
     quality_threshold: int | float = 0,
     output_mode: str = "append"
-) -> str:
+) -> None:
     """
     Filters reads in a FASTQ file by length, GC content, and quality score.
 
@@ -22,7 +22,7 @@ def filter_fastq(
         output_mode: File writing mode ("append" or "rewrite").
 
     Returns:
-        FASTQ file containing filtered reads.
+        None
     """
     input_fastq = validate_input(input_fastq)
     output_fastq, output_mode = validate_output(output_fastq, output_mode)
