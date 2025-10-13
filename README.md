@@ -1,12 +1,18 @@
 # pytteromics
 
 `pytteromics` is a small (but proud) Python package for basic bioinformatics tasks.
-It provides lightweight utilities for working with nucleotide sequences and common file formats like FASTQ, FASTA, and BLAST outputs.
+
 The package includes tools for:
-	•	Filtering FASTQ reads by length, GC content, and quality thresholds.
-	•	Processing DNA/RNA sequences — transcription, reverse complement, and validation.
-	•	Converting multiline FASTA files into one-line-per-sequence format.
-	•	Parsing BLAST output files to extract and organize protein descriptions.
+
+🐍 Filtering FASTQ reads by length, GC content, and quality thresholds.
+
+🐍 Processing DNA/RNA sequences — transcription, reverse complement, and validation.
+
+🐍 Converting multiline FASTA files into one-line-per-sequence format.
+
+🐍 Parsing BLAST output files to extract and organize protein descriptions.
+
+🐍 Extracting neighboring genes from a GenBank (.gbk) file for one or more target genes of interest.
 
 ## Installation
 
@@ -61,5 +67,18 @@ from pytteromics import parse_blast_output
 parsed_path = parse_blast_output(
     input_file = "data/example_blast_results.txt",
     output_file = "data/parsed_blast_results.txt"
+)
+```
+
+
+```Python
+from pytteromics import select_genes_from_gbk_to_fasta
+
+select_genes_from_gbk_to_fasta(
+    input_gbk = "data/example_gbk.gbk",
+    genes = ["ligB_1", "guaA"], # target gene names
+    n_before = 1, # number of neighboring genes before each target
+    n_after = 1, # number of neighboring genes after each target
+    output_fasta = "data/selected_from_gbk.fasta"
 )
 ```
