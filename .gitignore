@@ -208,6 +208,7 @@ __marimo__/
 
 .DS_Store
 tests/
-data/
+data/*
+!data/**/example*
 filtered/
 tmp*
