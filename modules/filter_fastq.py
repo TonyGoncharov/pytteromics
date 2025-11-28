@@ -56,7 +56,7 @@ def is_len_passing(
 
 def validate_input(file_path: str) -> str:
     if not os.path.isfile(file_path):
-        raise ValueError("Error: at least 2 arguments expected!")
+        raise ValueError("Error: File does not exist.")
     return file_path
 
 
