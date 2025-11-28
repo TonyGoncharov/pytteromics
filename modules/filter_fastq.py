@@ -48,7 +48,7 @@ def is_len_passing(
     sequence: str,
     length_bounds: int | tuple[int, int] = (0, 2**32)
 ) -> bool:
-    if type(length_bounds) in (int, float):
+    if isinstance(length_bounds, (int, float)):
         length_bounds = (0, length_bounds)
     min_len, max_len = length_bounds
     return min_len <= calc_len_seq(sequence) <= max_len
