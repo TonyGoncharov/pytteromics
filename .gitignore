@@ -212,3 +212,4 @@ data/*
 !data/**/example*
 filtered/
 tmp*
+settings.json
