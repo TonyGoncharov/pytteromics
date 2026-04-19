@@ -46,17 +46,17 @@ class NucleicAcidSequence(BiologicalSequence):
         '''specific rules are defined in the descendant classes'''
         raise NotImplementedError
 
-    def complement(self) -> str:
+    def complement(self) -> 'NucleicAcidSequence':
         compl_seq = []
-        for i in range(0, len(self.sequence)):
-            compl_seq.append(self._compl_rules[self.sequence[i]])
-        return ''.join(compl_seq)
+        for char in self.sequence:
+            compl_seq.append(self._compl_rules[char])
+        return self.__class__(''.join(compl_seq))
     
-    def reverse(self) -> str:
-        return self.sequence[::-1]
+    def reverse(self) -> 'NucleicAcidSequence':
+        return self.__class__(self.sequence[::-1])
 
-    def reverse_complement(self) -> str:
-        return self.complement()[::-1]
+    def reverse_complement(self) -> 'NucleicAcidSequence':
+        return self.__class__(str(self.complement())[::-1])
 
 
 class DNASequence(NucleicAcidSequence):
@@ -93,9 +93,9 @@ class DNASequence(NucleicAcidSequence):
     
     def transcribe(self) -> str:
         transc_seq = []
-        for i in range(0, len(self.sequence)):
-            transc_seq.append(self._transc_rules[self.sequence[i]])
-        return ''.join(transc_seq)
+        for char in self.sequence:
+            transc_seq.append(self._transc_rules[char])
+        return RNASequence(''.join(transc_seq))
     
 
 class RNASequence(NucleicAcidSequence):
@@ -193,11 +193,11 @@ def filter_fastq(
     input_fastq = _validate_input(input_fastq)
     output_fastq, mode = _prepare_output(output_fastq, output_mode)
 
-    if type(gc_bounds) in (int, float):
+    if isinstance(gc_bounds, (int, float)):
         gc_bounds = (0, gc_bounds)
     gc_min, gc_max = gc_bounds
 
-    if type(length_bounds) in (int, float):
+    if isinstance(length_bounds, (int, float)):
         length_bounds = (0, length_bounds)
     len_min, len_max = length_bounds
 
