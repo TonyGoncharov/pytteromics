@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqUtils import gc_fraction
+import argparse
 
 
 class BiologicalSequence(ABC):
@@ -220,3 +221,80 @@ def filter_fastq(
 
     with open(output_fastq, mode) as out_handle:
         SeqIO.write(passed_records, out_handle, 'fastq')
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(
+        prog='pytteromics',
+        description='Filter reads in a FASTQ file by GC content, length, and quality score.'
+    )
+
+    parser.add_argument(
+        'input_fastq',
+        type=str,
+        help='Path to the input FASTQ file.'
+    )
+
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        default='output_fastq.fastq',
+        dest='output_fastq',
+        help='Path to the output FASTQ file (default: output_fastq.fastq).'
+    )
+
+    parser.add_argument(
+        '--gc',
+        type=float,
+        nargs='+',
+        default=[0, 100],
+        dest='gc_bounds',
+        help='GC content bounds in percent: one value sets maximum, two values set min and max (default: 0 100).'
+    )
+
+    parser.add_argument(
+        '--length',
+        type=int,
+        nargs='+',
+        default=[0, 2**32],
+        dest='length_bounds',
+        help='Read length bounds: one value sets maximum, two values set min and max (default: 0 2^32).'
+    )
+
+    parser.add_argument(
+        '--quality',
+        type=float,
+        default=0,
+        dest='quality_threshold',
+        help='Minimum average PHRED quality score (default: 0).'
+    )
+
+    parser.add_argument(
+        '--mode',
+        choices=['append', 'rewrite'],
+        default='append',
+        dest='output_mode',
+        help='Output file writing mode (default: append).'
+    )
+
+    args = parser.parse_args()
+
+    if len(args.gc_bounds) == 2:
+        gc = tuple(args.gc_bounds)
+    else:
+        gc = args.gc_bounds[0]
+
+    if len(args.length_bounds) == 2:
+        length = tuple(args.length_bounds)
+    else:
+        length = args.length_bounds[0]
+
+    filter_fastq(
+        input_fastq=args.input_fastq,
+        output_fastq=args.output_fastq,
+        gc_bounds=gc,
+        length_bounds=length,
+        quality_threshold=args.quality_threshold,
+        output_mode=args.output_mode,
+    )
