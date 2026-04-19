@@ -1,18 +1,18 @@
 # pytteromics
 
+🎉 Meet the new implementation!
+
 `pytteromics` is a small (but proud) Python package for basic bioinformatics tasks.
 
 The package includes tools for:
 
-🐍 Filtering FASTQ reads by length, GC content, and quality thresholds.
+🐍 FASTQ filtering by read length, GC content, and average quality threshold.
 
-🐍 Processing DNA/RNA sequences — transcription, reverse complement, and validation.
+🐍 DNA sequence utilities: validation, reverse/complement, reverse-complement, and transcription to RNA.
 
-🐍 Converting multiline FASTA files into one-line-per-sequence format.
+🐍 RNA sequence utilities: validation, reverse/complement, and reverse-complement.
 
-🐍 Parsing BLAST output files to extract and organize protein descriptions.
-
-🐍 Extracting neighboring genes from a GenBank (.gbk) file for one or more target genes of interest.
+🐍 Protein sequence utilities: trypsin digestion into peptide fragments.
 
 ## Installation
 
@@ -24,61 +24,59 @@ cd pytteromics
 ```
 ## Examples
 
-```Python
+### FASTQ filtering
+```python
 from pytteromics import filter_fastq
 
 # Filter reads by GC content, length, and quality
-filtered_path = filter_fastq(
-    input_fastq = "data/example.fastq",
-    output_fastq = "data/filtered.fastq",
-    gc_bounds = (40, 60),
-    length_bounds = (100, 1000),
-    quality_threshold = 30,
-    output_mode = "rewrite"
+filter_fastq(
+    input_fastq="data/example_fastq.fastq",
+    output_fastq="data/filtered.fastq",
+    gc_bounds=(40, 60),
+    length_bounds=(50, 300),
+    quality_threshold=30,
+    output_mode="rewrite",
 )
 ```
 
-```Python
-from pytteromics import run_dna_rna_tools
+### DNA sequence operations
+```python
+from pytteromics import DNASequence
 
-# Example: transcription (DNA → RNA)
-result = run_dna_rna_tools("transcribe", "ATGCTTAA")
-print(result)  # Output: AUGCUUAA
+my_dna = DNASequence('ATGGCTGGTATTTGT')
 
-# Example: reverse complement for multiple sequences
-results = run_dna_rna_tools("reverse_complement", "ATGC", "GGAATT")
-print(results)  # Output: ['GCAT', 'AATTCC']
+print('complement: ', my_dna.complement())
+print('reverse: ', my_dna.reverse())
+print('reverse_complement: ', my_dna.reverse_complement())
+print('transcribe: ', my_dna.transcribe())
+
+# complement: TACCGACCATAAACA
+# reverse: TGTTTATGGTCGGTA
+# reverse_complement: ACAAATACCAGCCAT
+# transcribe: AUGGCUGGUAUUUGU
 ```
 
+### RNA sequence operations
+```python
+from pytteromics import RNASequence
 
-```Python
-from pytteromics import convert_multiline_fasta_to_oneline
+my_rna = RNASequence('AUGGCUGGUAUUUGU')
 
-output_path = convert_multiline_fasta_to_oneline(
-    input_fasta = "data/example_multiline.fasta",
-    output_fasta = "data/oneline_fasta.fasta"
-)
+print('complement: ', my_rna.complement())
+print('reverse: ', my_rna.reverse())
+print('reverse_complement: ', my_rna.reverse_complement())
+
+# complement: UACCGACCAUAAACA
+# reverse: UGUUUAUGGUCGGUA
+# reverse_complement: ACAAAUACCAGCCAU
 ```
 
+### Trypsin digestion
+```python
+from pytteromics import AminoAcidSequence
 
-```Python
-from pytteromics import parse_blast_output
+my_protein = AminoAcidSequence('MKWVTFISLLFLFSSAYSRGVFRRDAHKSEVAHRFKDLGEENFKALVLIAFAQYLQQCPF')
 
-parsed_path = parse_blast_output(
-    input_file = "data/example_blast_results.txt",
-    output_file = "data/parsed_blast_results.txt"
-)
-```
-
-
-```Python
-from pytteromics import select_genes_from_gbk_to_fasta
-
-select_genes_from_gbk_to_fasta(
-    input_gbk = "data/example_gbk.gbk",
-    genes = ["ligB_1", "guaA"], # target gene names
-    n_before = 1, # number of neighboring genes before each target
-    n_after = 1, # number of neighboring genes after each target
-    output_fasta = "data/selected_from_gbk.fasta"
-)
+print('tryptic peptides: ', my_protein.digest_with_trypsin())
+# tryptic peptides: ['MK', 'WVTFISLLFLFSSAYSR', 'GVFR', 'R', 'DAHK', 'SEVAHR', 'FK', 'DLGEENFK', 'ALVLIAFAQYLQQCPF']
 ```
