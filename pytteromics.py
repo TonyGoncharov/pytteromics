@@ -4,6 +4,18 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqUtils import gc_fraction
 import argparse
+import logging
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler('pytteromics.log'),
+        logging.StreamHandler(),
+    ]
+)
+logger = logging.getLogger(__name__)
 
 
 class BiologicalSequence(ABC):
@@ -92,7 +104,7 @@ class DNASequence(NucleicAcidSequence):
             'c': 'c',
         }
     
-    def transcribe(self) -> str:
+    def transcribe(self) -> 'RNASequence':
         transc_seq = []
         for char in self.sequence:
             transc_seq.append(self._transc_rules[char])
@@ -150,6 +162,7 @@ def _mean_quality(record: SeqRecord) -> float:
 
 def _validate_input(file_path: str) -> str:
     if not os.path.isfile(file_path):
+        logger.error("Input file not found: '%s'", file_path)
         raise ValueError(f"File '{file_path}' does not exist")
     return file_path
 
@@ -204,7 +217,11 @@ def filter_fastq(
 
     passed_records: list[SeqRecord] = []
 
+    total_records = 0
+
     for record in SeqIO.parse(input_fastq, 'fastq'):
+        total_records += 1
+
         seq_len = len(record.seq)
 
         if not (len_min <= seq_len <= len_max):
@@ -218,6 +235,11 @@ def filter_fastq(
             continue
 
         passed_records.append(record)
+
+    logger.info(
+        "Filtering complete: %d reads passed out of %d total. Output: '%s'",
+        len(passed_records), total_records, output_fastq
+    )
 
     with open(output_fastq, mode) as out_handle:
         SeqIO.write(passed_records, out_handle, 'fastq')
@@ -259,7 +281,7 @@ if __name__ == '__main__':
         nargs='+',
         default=[0, 2**32],
         dest='length_bounds',
-        help='Read length bounds: one value sets maximum, two values set min and max (default: 0 2^32).'
+        help='Read length bounds: one value sets maximum, two values set min and max (default: 0 4294967296).'
     )
 
     parser.add_argument(
